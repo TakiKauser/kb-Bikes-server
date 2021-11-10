@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const ObjectId = require("mongodb").ObjectId;
 const { MongoClient } = require('mongodb');
 require('dotenv').config();
 
@@ -19,6 +20,7 @@ async function run() {
 
         const database = client.db('kbBikes');
         const bikeCollection = database.collection('bikes');
+        const orderCollection = database.collection('orders');
         const userCollection = database.collection('users');
 
         // get fixed items from collection
@@ -28,6 +30,15 @@ async function run() {
             res.send(items);
         });
 
+        // get single item
+        app.get('/bike/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const event = await bikeCollection.findOne(query);
+            res.json(event);
+        });
+
+        // test
         app.get('/orders', async (req, res) => {
             console.log("bikes");
             // const email = req.query.email;
@@ -52,6 +63,12 @@ async function run() {
             res.json({ admin: isAdmin });
         })
 
+        // post order
+        app.post('/order', async (req, res) => {
+            const result = await orderCollection.insertOne(req.body);
+            res.send(result);
+        });
+
         // add bikes 
         app.post('/bikes', async (req, res) => {
             const bikes = req.body;
@@ -63,7 +80,6 @@ async function run() {
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await userCollection.insertOne(user);
-            console.log(result);
             res.json(result);
         })
 
