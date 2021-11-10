@@ -21,7 +21,14 @@ async function run() {
         const bikeCollection = database.collection('bikes');
         const userCollection = database.collection('users');
 
+        // get fixed items from collection
         app.get('/bikes', async (req, res) => {
+            const cursor = bikeCollection.find({});
+            const items = await cursor.limit(6).toArray();
+            res.send(items);
+        });
+
+        app.get('/orders', async (req, res) => {
             console.log("bikes");
             // const email = req.query.email;
             // const date = new Date(req.query.date).toLocaleDateString();
