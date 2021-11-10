@@ -32,6 +32,7 @@ async function run() {
             res.json("Checking...");
         })
 
+        // get users by email
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email: email };
@@ -44,12 +45,14 @@ async function run() {
             res.json({ admin: isAdmin });
         })
 
+        // add bikes 
         app.post('/bikes', async (req, res) => {
-            const appointment = req.body;
-            const result = await bikeCollection.insertOne(appointment);
+            const bikes = req.body;
+            const result = await bikeCollection.insertOne(bikes);
             res.json(result);
         })
 
+        // add users
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await userCollection.insertOne(user);
@@ -57,6 +60,7 @@ async function run() {
             res.json(result);
         })
 
+        // 
         app.put('/users', async (req, res) => {
             const user = req.body;
             const filter = { email: user.email };
@@ -68,6 +72,7 @@ async function run() {
             res.json(result);
         })
 
+        // update user role (admin)
         app.put('/users/admin', async (req, res) => {
             const user = req.body;
             const filter = { email: user.email };
