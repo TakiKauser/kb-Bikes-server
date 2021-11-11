@@ -141,6 +141,14 @@ async function run() {
             res.send(result);
         })
 
+        // delete product-item
+        app.delete('/allBikes/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await bikeCollection.deleteOne(query);
+            res.send(result);
+        })
+
     } finally {
         //   await client.close();
     }
