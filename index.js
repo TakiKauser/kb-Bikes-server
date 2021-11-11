@@ -47,17 +47,11 @@ async function run() {
             res.send(result);
         });
 
-        // test
+        // get all Orders
         app.get('/orders', async (req, res) => {
-            console.log("bikes");
-            // const email = req.query.email;
-            // const date = new Date(req.query.date).toLocaleDateString();
-
-            // const query = { email: email, date: date };
-            // const cursor = bikeCollection.find(query);
-            // const bikes = await cursor.toArray();
-            res.json("Checking...");
-        })
+            const result = await orderCollection.find({}).toArray();
+            res.send(result);
+        });
 
         // get users by email
         app.get('/users/:email', async (req, res) => {
@@ -70,6 +64,21 @@ async function run() {
                 isAdmin = true;
             }
             res.json({ admin: isAdmin });
+        })
+
+        // PUT order Status
+        app.put('/orders/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    status: "Shipped"
+                },
+            };
+            const result = await orderCollection.updateOne(filter, updateDoc, options);
+            console.log(result);
+            res.json(result);
         })
 
         // post order
