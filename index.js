@@ -30,6 +30,13 @@ async function run() {
             res.send(items);
         });
 
+        // get all items from collection
+        app.get('/allBikes', async (req, res) => {
+            const cursor = bikeCollection.find({});
+            const items = await cursor.toArray();
+            res.send(items);
+        });
+
         // get single item
         app.get('/bike/:id', async (req, res) => {
             const id = req.params.id;
