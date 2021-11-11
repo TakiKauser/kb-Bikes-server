@@ -38,6 +38,15 @@ async function run() {
             res.json(event);
         });
 
+        // get individual orders
+        app.get('/myOrders/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: { $regex: email } };
+            const result = await orderCollection.find(query).toArray();
+            console.log(result);
+            res.send(result);
+        });
+
         // test
         app.get('/orders', async (req, res) => {
             console.log("bikes");
@@ -106,6 +115,14 @@ async function run() {
             }
             const result = await userCollection.updateOne(filter, updateDoc);
             res.json(result);
+        })
+
+        // delete order
+        app.delete('/myOrders/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await orderCollection.deleteOne(query);
+            res.send(result);
         })
 
     } finally {
