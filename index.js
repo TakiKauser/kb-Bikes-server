@@ -21,6 +21,7 @@ async function run() {
         const database = client.db('kbBikes');
         const bikeCollection = database.collection('bikes');
         const orderCollection = database.collection('orders');
+        const reviewCollection = database.collection('reviews');
         const userCollection = database.collection('users');
 
         // get fixed items from collection
@@ -51,6 +52,12 @@ async function run() {
             const query = { email: { $regex: email } };
             const result = await orderCollection.find(query).toArray();
             console.log(result);
+            res.send(result);
+        });
+
+        // get all reviews
+        app.get('/reviews', async (req, res) => {
+            const result = await reviewCollection.find({}).toArray();
             res.send(result);
         });
 
@@ -88,6 +95,12 @@ async function run() {
             res.json(result);
         })
 
+        // add reviews
+        app.post('/reviews', async (req, res) => {
+            const result = await reviewCollection.insertOne(req.body);
+            res.send(result);
+        })
+
         // post order
         app.post('/order', async (req, res) => {
             const result = await orderCollection.insertOne(req.body);
@@ -108,7 +121,7 @@ async function run() {
             res.json(result);
         })
 
-        // 
+        // set users
         app.put('/users', async (req, res) => {
             const user = req.body;
             const filter = { email: user.email };
