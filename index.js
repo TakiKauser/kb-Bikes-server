@@ -51,7 +51,6 @@ async function run() {
             const email = req.params.email;
             const query = { email: { $regex: email } };
             const result = await orderCollection.find(query).toArray();
-            console.log(result);
             res.send(result);
         });
 
@@ -91,7 +90,6 @@ async function run() {
                 },
             };
             const result = await orderCollection.updateOne(filter, updateDoc, options);
-            console.log(result);
             res.json(result);
         })
 
